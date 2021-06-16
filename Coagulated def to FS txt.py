@@ -25,7 +25,6 @@ while position < len(fileList):
     line = fileList[position]
 
     if re.search('voxel', line, re.I):
-        #tilenumber = line[line.find('tile ')+1:line.find(' ')]
         if re.search('rotate', line, re.I):
             tilenumber = line[line.find('e ')+1:line.find(' r')]
             newline = ('Voxel' + tilenumber + ' { filename ' + line.split(' ')[1].strip() + " rotate TRUE }" )
