@@ -20,6 +20,7 @@ def write_file():
 	config.write(open('Settings.ini', 'w'))
 
 config = configparser.RawConfigParser()
+#if settings file doesn't exist create a blank one
 if not os.path.exists('Settings.ini'):
 	config['BlacklistedVoxels'] = {'Blacklist': ''}
 	config['FSEditedVoxels'] = {'FSEdit': '' }
@@ -47,7 +48,7 @@ while position < len(fileList):
 		
 		#For Voxels that don't work in FS
 		if tilenumber in Blacklist:
-			blacklisted = ("\\\ ")
+			blacklisted = ("// ")
 		if not tilenumber in Blacklist:
 			blacklisted = ("")
 
@@ -58,9 +59,9 @@ while position < len(fileList):
 			FSVoxel = ("")
 			
 		if re.search('rotate', line, re.I):
-			newline = (blacklisted + 'Voxel ' + tilenumber + ' { filename ' + line.split(' ')[1].strip()[:-5] + FSVoxel + ".kvx" + " rotate TRUE }" )
+			newline = (blacklisted + 'Voxel ' + tilenumber + ' { filename ' + line.split(' ')[1].strip()[:-5] + FSVoxel + '.kvx"' + " rotate TRUE }" )
 		else:
-			newline = (blacklisted + 'Voxel ' + tilenumber + ' { filename ' + line.split(' ')[1].strip()[:-5] + FSVoxel + ".kvx" + " }" )
+			newline = (blacklisted + 'Voxel ' + tilenumber + ' { filename ' + line.split(' ')[1].strip()[:-5] + FSVoxel + '.kvx"' + " }" )
 
 		fileList[position] = newline
 		
