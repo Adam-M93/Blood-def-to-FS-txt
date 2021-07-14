@@ -20,9 +20,9 @@ def write_file():
 	config.write(open('Settings.ini', 'w'))
 
 config = configparser.RawConfigParser()
-if not os.path.exists(".\Settings.ini"):
+if not os.path.exists('Settings.ini'):
 	config['BlacklistedVoxels'] = {'Blacklist': ''}
-	config['FSEditedVoxels'] = {'FSEdit': ''}
+	config['FSEditedVoxels'] = {'FSEdit': '' }
 	write_file()
 
 config.read(".\Settings.ini")
@@ -33,9 +33,9 @@ while position < len(fileList):
 	line = fileList[position]
 	if os.path.exists(".\Settings.ini"):
 		BlacklistGet = config.get('BlacklistedVoxels', 'Blacklist', fallback='')
-		Blacklist = BlacklistGet.split(',')
+		Blacklist = BlacklistGet.split(', ')
 		FSVoxelsGet = config.get('FSEditedVoxels', 'FSEdit', fallback='')
-		FSVoxels = FSVoxelsGet.split(',')
+		FSVoxels = FSVoxelsGet.split(', ')
 	else:
 		BlacklistGet = ("")
 		Blacklist = ("")
