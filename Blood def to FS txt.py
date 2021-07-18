@@ -44,27 +44,41 @@ while position < len(fileList):
 		FSVoxels = ("")
 
 	if re.search('voxel', line, re.I):
-		tilenumber = line[line.find('e ')+1:line.find(' r')].strip()
+		tilenumber = re.findall(r'\b\d+\b', line)
 		
-		#For Voxels that don't work in FS
-		if tilenumber in Blacklist:
-			blacklisted = ("// ")
-		if not tilenumber in Blacklist:
-			blacklisted = ("")
-
-		#For Voxels that need modifications for FS
-		if tilenumber in FSVoxels:
-			FSVoxel = ("_FS")
-		if not tilenumber in FSVoxels:
-			FSVoxel = ("")
+		for x in tilenumber:
 			
-		if re.search('rotate', line, re.I):
-			newline = (blacklisted + 'Voxel ' + tilenumber + ' { filename ' + line.split(' ')[1].strip()[:-5] + FSVoxel + '.kvx"' + " rotate TRUE }" )
-		else:
-			newline = (blacklisted + 'Voxel ' + tilenumber + ' { filename ' + line.split(' ')[1].strip()[:-5] + FSVoxel + '.kvx"' + " }" )
+			#For Voxels that don't work in FS
+			y = int(tilenumber.index(x))
+			if tilenumber[y] in Blacklist:
+				blacklisted = ("// ")
+			if not tilenumber[y] in Blacklist:
+				blacklisted = ("")
+				
+			#For Voxels that need modifications for FS
+			if tilenumber[y] in FSVoxels:
+				FSVoxel = ("_FS")
+			if not tilenumber[y] in FSVoxels:
+				FSVoxel = ("")
 
+		#For Voxels that rotate
+		if ' rotate ' in line:
+			Rotate = " rotate TRUE"
+		else:
+			Rotate = ""
+			
+		newline = (blacklisted + 'Voxel ' + tilenumber[0] + ' { filename ' + line.split(' ')[1].strip()[:-5] + FSVoxel + '.kvx"' + Rotate + " }" + line.split('}')[1] )
+		
 		fileList[position] = newline
 		
+		#For Voxels that have multiple tiles listed in the line (tile0 xxxx tile1 yyyy etc)
+		if len(tilenumber) >= 2:
+			for x in tilenumber[1:]:
+				y = int(tilenumber.index(x))
+				
+				#For some reason having "Voxel" causes this to break
+				fileList.insert(position + y, (blacklisted + 'Voxe ' + tilenumber[y] + ' { filename ' + line.split(' ')[1].strip()[:-5] + FSVoxel + '.kvx"' + Rotate + " }" + line.split('}')[1] ))
+
 	position += 1
 
 
@@ -74,7 +88,12 @@ if not (BlacklistGet == ("")):
 	print('Blacklisted Voxels: ' + BlacklistGet)
 if not (FSVoxelsGet == ("")):
 	print('FS Edited Voxels: ' + FSVoxelsGet)
+
+#Replace Voxe with Voxel
+fileList = [item.replace("Voxe ", "Voxel ") for item in fileList]
 	
+position = 0
+
 #write everything to file
 while position < len(fileList):
 	newFile.write(fileList[position] + "\n")
