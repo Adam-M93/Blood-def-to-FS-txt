@@ -9,9 +9,8 @@ Drop the .def file onto the exe and the new .txt file should be created next to 
 Settings file format & example:
 
 ```
-[BlacklistedVoxels]
+[Settings]
 Blacklist = 3436
-
-[FSEditedVoxels]
-FSEdit = 0536, 0540, 0547
+AltFSVoxels = 0536, 0540, 0547
+RandomizedAngle = 0456
 ```
